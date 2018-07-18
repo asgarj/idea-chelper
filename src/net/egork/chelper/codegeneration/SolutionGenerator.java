@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static java.lang.String.format;
+
 /**
  * @author egor@egork.net
  */
@@ -440,13 +442,8 @@ public class SolutionGenerator {
         if (task.input.type == StreamConfiguration.StreamType.STANDARD) {
             builder.append("\t\tInputStream inputStream = System.in;\n");
         } else if (task.input.type != StreamConfiguration.StreamType.LOCAL_REGEXP) {
-            builder.append("\t\tInputStream inputStream;\n");
-            builder.append("\t\ttry {\n");
-            builder.append("\t\t\tinputStream = new FileInputStream(\"").append(task.input.
-                getFileName(task.name, ".in")).append("\");\n");
-            builder.append("\t\t} catch (IOException e) {\n");
-            builder.append("\t\t\tthrow new RuntimeException(e);\n");
-            builder.append("\t\t}\n");
+            builder.append(format("\t\tInputStream inputStream = %s.class.getResourceAsStream(%s);\n", task.mainClass,
+                task.input.getFileName(task.name, ".in")));
         } else {
             builder.append("\t\tInputStream inputStream;\n");
             builder.append("\t\ttry {\n");
